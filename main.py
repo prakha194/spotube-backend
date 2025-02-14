@@ -16,11 +16,11 @@ async def search_videos(q: str):
     url = f"{YOUTUBE_API_BASE_URL}?part=snippet&q={q}&maxResults=10&key={YT_API_KEY}"
     try:
         response = requests.get(url)
-        response.raise_for_status()
+        response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
         data = response.json()
         videos = []
         for item in data.get('items', []):
-            if item['id']['kind'] == 'youtube#video':
+            if item['id']['kind'] == 'youtube#video': # Filter for videos only
                 video = {
                     'title': item['snippet']['title'],
                     'description': item['snippet']['description'],
@@ -31,9 +31,11 @@ async def search_videos(q: str):
                 videos.append(video)
         return {"videos": videos}
     except requests.exceptions.RequestException as e:
-        return {"error": f"Error: {e}"}, response.status_code if hasattr(response, 'status_code') else 500
+        print(f"Error fetching videos: {e}") # Print the error for debugging
+        return {"error": "Error fetching videos"}, 500 # Return 500 Internal Server Error
     except Exception as e:
-        return {"error": f"Error: {e}"}, 500
+        print(f"An unexpected error occurred: {e}") # Print the error for debugging
+        return {"error": "An unexpected error occurred"}, 500 # Return 500 Internal Server Error
 
 @app.get("/trending")
 async def get_trending_videos():
@@ -43,9 +45,12 @@ async def get_trending_videos():
         response.raise_for_status()
         return response.json()
     except requests.exceptions.RequestException as e:
-        return {"error": f"Error: {e}"}, response.status_code if hasattr(response, 'status_code') else 500
+        print(f"Error fetching trending videos: {e}") # Print the error for debugging
+        return {"error": "Error fetching trending videos"}, 500 # Return 500 Internal Server Error
     except Exception as e:
-        return {"error": f"Error: {e}"}, 500
+        print(f"An unexpected error occurred: {e}") # Print the error for debugging
+        return {"error": "An unexpected error occurred"}, 500 # Return 500 Internal Server Error
+
 
 @app.get("/")
 async def root():
