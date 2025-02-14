@@ -1,4 +1,4 @@
-fastapi
-uvicorn
-requests
-google-api-python-client
+fastapi==0.110.0
+uvicorn==0.27.1
+requests==2.31.0
+google-api-python-client==2.123.0
