@@ -3,7 +3,8 @@ import requests
 
 app = FastAPI()
 
-YT_API_KEY = "AIzaSyCIZG9-3mbSsWZzpgW1K-8sVOVtSuHMvN8"
+import os
+YT_API_KEY = os.getenv("YT_API_KEY")
 
 @app.get("/")
 def home():
